@@ -1,6 +1,6 @@
 Name:           netfabb-basic
 Version:        5.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Freeware suite for STL editing
 License:        Redistributable
 URL:            http://www.netfabb.com/
@@ -115,6 +115,9 @@ update-desktop-database &>/dev/null || :
 
 
 %changelog
+* Fri Sep 12 2014 Miro Hrončok <mhroncok@redhat.com> - 5.2.0-2
+- Rebuilt
+
 * Fri Sep 12 2014 Miro Hrončok <mhroncok@redhat.com> - 5.2.0-1
 - New version
 

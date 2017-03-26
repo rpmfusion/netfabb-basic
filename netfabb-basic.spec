@@ -1,6 +1,6 @@
 Name:           netfabb-basic
 Version:        5.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Freeware suite for STL editing
 License:        Redistributable
 URL:            http://www.netfabb.com/
@@ -115,6 +115,9 @@ update-desktop-database &>/dev/null || :
 
 
 %changelog
+* Sun Mar 26 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 5.2.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Wed Apr 22 2015 Miro Hrončok <mhroncok@redhat.com> - 5.2.1-1
 - New version
 

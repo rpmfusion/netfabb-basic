@@ -1,16 +1,23 @@
 Name:           netfabb-basic
-Version:        5.2.1
-Release:        2%{?dist}
+%global altname netfabb-free
+Version:        7.2.0
+Release:        1%{?dist}
 Summary:        Freeware suite for STL editing
 License:        Redistributable
 URL:            http://www.netfabb.com/
 # keep both sources in the SRPM
 # both files are downloaded from http://www.netfabb.com/downloadcenter.php?basic=1
 # and have no public tarball urls
-Source0:        %{name}_%{version}_linux32.tar.gz
-Source1:        %{name}_%{version}_linux64.tar.gz
+# The Manual directory has been removed as it is not redistributable
+# Useful contents from the 5.2.1 version added (man, icons, LICENSE, README)
+# The text of the license is the same as if you run netfabb 7.2.0
+# (confirmed by mhroncok@redhat.com)
+Source0:        %{altname}_%{version}_linux32.tar.gz
+Source1:        %{altname}_%{version}_linux64.tar.gz
 BuildRequires:  desktop-file-utils
 Requires:       lib3ds%{?_isa} = 1.3.0
+Provides:       %{altname} = %{version}-%{release}
+Provides:       %{altname}%{?_isa} = %{version}-%{release}
 
 ExclusiveArch:  %{ix86} x86_64
 %global debug_package %{nil}
@@ -25,12 +32,16 @@ additional modules.
 %prep
 
 %ifarch %{ix86}
-%setup -qn %{name} -b0
+%setup -qTc -b0
 %endif
 
 %ifarch x86_64
-%setup -qn %{name} -b1
+%setup -qTc -b1
 %endif
+
+# Fix a Czech translation bug
+sed -i -e 's/Provézt/Provést/g' \
+       -e 's/provézt/provést/g' netfabb_free
 
 %build
 # nothing to do
@@ -51,7 +62,8 @@ mkdir -p %{buildroot}%{_mandir}/man1
 mkdir -p %{buildroot}%{_datadir}/pixmaps
 
 # binary and libraries
-install -pm 0755 netfabb %{buildroot}%{_bindir}/%{name}
+install -pm 0755 netfabb_free %{buildroot}%{_bindir}/%{altname}
+ln -s ./%{altname} %{buildroot}%{_bindir}/%{name}
 install -pm 0755 *.so.* %{buildroot}%{_libdir}/
 
 # we have this in Fedora
@@ -59,25 +71,27 @@ rm %{buildroot}%{_libdir}/lib3ds-netfabb-1.so.3
 ln -s lib3ds-1.so.3 %{buildroot}%{_libdir}/lib3ds-netfabb-1.so.3
 
 # desktopfile
-export DESKTOPFILE=%{buildroot}%{_datadir}/applications/%{name}.desktop
-echo "[Desktop Entry]">${DESKTOPFILE}
-echo "Type=Application">>${DESKTOPFILE}
-echo "Version=1.0">>${DESKTOPFILE}
-echo "Name=netfabb Basic">>${DESKTOPFILE}
-echo "GenericName=STL-Viewer">>${DESKTOPFILE}
-echo "GenericName[de]=STL-Betrachter">>${DESKTOPFILE}
-echo "Comment=View and repair STL files">>${DESKTOPFILE}
-echo "Comment[de]=STL Dateien betrachten und reparieren">>${DESKTOPFILE}
-echo "Icon=%{name}">>${DESKTOPFILE}
-echo "TryExec=%{_bindir}/%{name}">>${DESKTOPFILE}
-echo "Exec=%{_bindir}/%{name} %U">>${DESKTOPFILE}
-echo "Terminal=false">>${DESKTOPFILE}
-echo "MimeType=application/netfabb;application/sla;application/x-3ds;model/mesh;image/x-3ds;model/x3d+xml;model/x3d+binary;">>${DESKTOPFILE}
-echo "Categories=Graphics;3DGraphics;Viewer;">>${DESKTOPFILE}
-echo "StartupNotify=true">>${DESKTOPFILE}
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=netfabb Basic
+GenericName=STL-Viewer
+GenericName[de]=STL-Betrachter
+Comment=View and repair STL files
+Comment[de]=STL Dateien betrachten und reparieren
+Icon=%{name}
+TryExec=%{_bindir}/%{name}
+Exec=%{_bindir}/%{name} %U
+Terminal=false
+MimeType=application/netfabb;model/x.stl-binary;model/x.stl-ascii;application/sla;application/x-3ds;model/mesh;image/x-3ds;model/x3d+xml;model/x3d+binary;
+Categories=Graphics;3DGraphics;Viewer;
+StartupNotify=true
+EOF
 
 # man and icons
 cp -p man/%{name}.1.gz %{buildroot}%{_mandir}/man1
+cp -p man/%{altname}.1.gz %{buildroot}%{_mandir}/man1
 cp -p icons/%{name}.svg %{buildroot}%{_datadir}/icons/hicolor/scalable/apps
 for res in 16 22 24 32 48 128; do
   cp -p icons/%{name}${res}.png %{buildroot}%{_datadir}/icons/hicolor/${res}x${res}/apps/%{name}.png
@@ -105,16 +119,24 @@ fi
 update-desktop-database &>/dev/null || :
 
 %files
-%doc README LICENSE changelog.gz Examples
+%doc README LICENSE Examples
+%{_bindir}/%{altname}
 %{_bindir}/%{name}
 %{_libdir}/*
 %{_datadir}/applications/*
 %{_datadir}/pixmaps/*
 %{_datadir}/icons/hicolor/*/apps/*
-%{_mandir}/man1/*
+%{_mandir}/man1/%{altname}.1*
+%{_mandir}/man1/%{name}.1*
 
 
 %changelog
+* Sun Apr 02 2017 Miro Hrončok <mhroncok@redhat.com> - 7.2.0-1
+- New version 7.2.0
+- Use manpages icons etc. from 5.2.1
+- Fix a Czech translation bug
+- Add new MIME types model/x.stl-binary and model/x.stl-ascii
+
 * Sun Mar 26 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 5.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 

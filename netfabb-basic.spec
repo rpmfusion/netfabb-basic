@@ -1,7 +1,7 @@
 Name:           netfabb-basic
 %global altname netfabb-free
 Version:        7.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Freeware suite for STL editing
 License:        Redistributable
 URL:            http://www.netfabb.com/
@@ -131,6 +131,9 @@ update-desktop-database &>/dev/null || :
 
 
 %changelog
+* Fri Mar 02 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 7.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Mon Sep 18 2017 Sérgio Basto <sergio@serjux.com> - 7.2.0-3
 - Fixup rpm setup macro use -a instead -b
 

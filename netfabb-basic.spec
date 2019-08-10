@@ -1,7 +1,7 @@
 Name:           netfabb-basic
 %global altname netfabb-free
 Version:        7.2.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Freeware suite for STL editing
 License:        Redistributable
 URL:            http://www.netfabb.com/
@@ -115,6 +115,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sat Aug 10 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 7.2.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Tue Mar 05 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 7.2.0-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
